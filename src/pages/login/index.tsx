@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Logo from '/public/catLogo.png'
 import { useForm } from 'react-hook-form'
+import useLogin from '@/service/auth/auth'
 
 type Props = {}
 
@@ -13,11 +14,14 @@ type LoginState = {
 const LoginPage = (props: Props) => {
     const { register, handleSubmit, watch } = useForm<LoginState>()
 
-    
+    const { error,data:userData, isSuccess, refetch, isError } = useLogin({
+        username: watch('username'),
+        password: watch('password'),
+      })
 
     const handleLogin =(data:LoginState)=>{
         console.log("data: ",data)
-
+        refetch()
     }
 
     return (
