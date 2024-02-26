@@ -1,11 +1,18 @@
 
 
-export interface LoginResponse{
+export interface LoginResponse {
     token: string
-    bigcard:string
-    idCard:string
-    mobilePhone:string
-    isOnlineRegister:string
-    isEWallet:string
-
-}
+    resultCode: string
+    resultMsgEn: string
+    resultMsgTh: string
+    apiName: string
+    username: string
+    redirectUrl: string
+    title: string
+    firstName: string
+    email: string
+    lastName: string
+    displayName: string
+    role: string
+    storeCode: string
+  }

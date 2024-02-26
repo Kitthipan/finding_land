@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Image from 'next/image'
 import Logo from '/public/catLogo.png'
 import { useForm } from 'react-hook-form'
 import useLogin from '@/service/auth/auth'
+import { useAuth } from '@/service/store/auth'
+import { ROUTE } from '@/constants/routes'
 
 type Props = {}
 
@@ -13,6 +15,7 @@ type LoginState = {
 
 const LoginPage = (props: Props) => {
     const { register, handleSubmit, watch } = useForm<LoginState>()
+    const { login } = useAuth()
 
     const { error,data:userData, isSuccess, refetch, isError } = useLogin({
         username: watch('username'),
@@ -23,6 +26,38 @@ const LoginPage = (props: Props) => {
         console.log("data: ",data)
         refetch()
     }
+
+    useEffect(() => {
+        if (isSuccess && userData) {
+          if(userData.resultCode === "0000"){
+            login(
+              {
+                token: userData.token,
+                remember: true,
+                redirectUri: ROUTE.HOME,
+              },
+              {
+                username: userData.username,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                employeeCode: '',
+                storeBuddyCode: '',
+                role: userData.role,
+                storeCode: userData.storeCode,
+              }
+            )
+          }else{
+            alert("Incorrect Username and Password")
+          }
+        }
+        if (isError) {
+          alert("Incorrect Username and Password")
+        }
+        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [isError, userData, isSuccess])
+
+
 
     return (
         <div>
@@ -70,5 +105,7 @@ const LoginPage = (props: Props) => {
         </div>
     )
 }
+
+LoginPage.authGuard = true
 
 export default LoginPage
